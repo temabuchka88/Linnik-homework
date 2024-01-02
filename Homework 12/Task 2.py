@@ -5,5 +5,4 @@ def fib(n):
         yield num_1
 
 
-asd = 10
 print(list(fib(7)))

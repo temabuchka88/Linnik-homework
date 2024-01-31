@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <title>table</title>
+</head>
+
+<body class="my-class">
+    <div>
+        <h1>Clients</h1>
+        <table border="1">
+            <tr>
+                <th>id </th>
+                <th>name </th>
+            </tr>
+            {% for client in clients %}
+            <tr>
+                <td>{{client.id}} </td>
+                <td>{{client.name}} </td>
+            </tr>
+            {% endfor %}
+    </div>
+    <div>
+        <h1>New Client</h1>
+        <form action="/clients" method="post" onsubmit="showAlert()">
+            <label for="name">Name:</label><br>
+            <input type="text" id="name" name="name"><br>
+            <input type="submit" type="Submit">
+        </form>
+    </div>
+    <script>
+        function showAlert() {
+            alert("New client created successfully!");
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders list</title>
+</head>
+<body>
+    <h1>Orders list:</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Prise</th>
+                <th>Name</th>
+                <th>Client ID</th>
+                <th></th>
+            </tr>
+        </thead>
+    <tbody>
+        {% for order in orders %}
+        <tr>
+            <td>{{order.id}}</td>
+            <td>{{order.cost}}</td>
+            <td>{{order.name}}</td>
+            <td>{{order.client_id}}</td>
+            <td><form action="/orders" method="DELETE">
+                <input type="hidden" name="delete_order_id" value="{{order.id}}">
+                <button type="submit">Delete</button>
+            </form></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+    <div>
+        <h1>New order</h1>
+        <form action="/orders" method="post" onsubmit="showAlert()">
+            <label for="cost">Prise:</label><br>
+            <input type="text" id="cost" name="cost"><br>
+            <label for="name">Name:</label><br>
+            <input type="text" id="name" name="name"><br>
+            <label for="client_id">Client ID:</label><br>
+            <input type="text" id="client_id" name="client_id"><br>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+
+    <script>
+        function showAlert() {
+            alert("New order created successfully!");
+        }
+    </script>
+</body>
+</html>

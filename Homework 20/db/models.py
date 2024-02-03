@@ -84,13 +84,20 @@ def create_order(cost, name, client_id):
     return new_order
 
 
-def delete_order(delete_order_id):
+def delete_order(id):
     session = Session()
-    order_to_delete = session.query(Orders).filter_by(id=delete_order_id).first()
-
-    if order_to_delete:
-        session.delete(order_to_delete)
-        session.commit()
-
+    for order in session.query(Orders):
+        if id == order.id:
+            session.delete(order)
+    session.commit()
     session.close()
-    return delete_order_id
+
+
+def update_order(id, cost, name, client_id):
+    session = Session()
+    get_id_orders = session.get(Orders, id)
+    get_cost_orders = cost
+    get_name_orders = name
+    get_client_id_orders = client_id
+    session.commit()
+    session.close()

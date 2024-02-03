@@ -15,6 +15,7 @@
                 <th>Name</th>
                 <th>Client ID</th>
                 <th></th>
+                <th></th>
             </tr>
         </thead>
     <tbody>
@@ -24,10 +25,8 @@
             <td>{{order.cost}}</td>
             <td>{{order.name}}</td>
             <td>{{order.client_id}}</td>
-            <td><form action="/orders" method="DELETE">
-                <input type="hidden" name="delete_order_id" value="{{order.id}}">
-                <button type="submit">Delete</button>
-            </form></td>
+            <td><button method="delete" onclick="delete_order({{ order.id }})">Delete</button></td>
+            <td><button method="put" onclick="edit_order({{ order.id }})">Update</button></td>
         </tr>
         {% endfor %}
     </tbody>
@@ -48,6 +47,19 @@
     <script>
         function showAlert() {
             alert("New order created successfully!");
+        }
+    </script>
+    <script>
+        function delete_order(order_id) {
+            fetch('/orders/'+order_id, {
+                method: 'delete'
+            })
+        }
+    </script>
+
+    <script>
+        function edit_order(order_id) {
+            window.location.href = '/updateorders/'+order_id
         }
     </script>
 </body>

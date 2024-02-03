@@ -47,11 +47,18 @@ def new_order():
             client_id=request.form.get("client_id"),
         )
         return redirect("/orders")
-    if request.method == "DELETE":
-        id_order_to_delete = request.form.get("delete_order_id")
-        if id_order_to_delete:
-            delete_order(id_order_to_delete)
+
+
+@app.route("/orders/<id>", methods=["DELETE"])
+def delete_my_order(id):
+    delete_order(int(id))
     return redirect("/orders")
+
+
+@app.route("/updateorders/<id>", methods=["GET"])
+def asd():
+    order = get_orders(id)
+    return render_template("updateorders.html", order=order)
 
 
 if __name__ == "__main__":

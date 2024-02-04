@@ -1,4 +1,13 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, create_engine, select, text
+from sqlalchemy import (
+    Column,
+    Integer,
+    String,
+    ForeignKey,
+    create_engine,
+    select,
+    text,
+    update,
+)
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker
 
 Base = declarative_base()
@@ -95,9 +104,9 @@ def delete_order(id):
 
 def update_order(id, cost, name, client_id):
     session = Session()
-    get_id_orders = session.get(Orders, id)
-    get_cost_orders = cost
-    get_name_orders = name
-    get_client_id_orders = client_id
+    get_id_order = session.get(Orders, id)
+    get_id_order.cost = cost
+    get_id_order.name = name
+    get_id_order.client_id = client_id
     session.commit()
     session.close()

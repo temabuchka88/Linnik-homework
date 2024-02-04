@@ -8,6 +8,7 @@ from db.models import (
     create_order,
     get_orders,
     delete_order,
+    update_order,
 )
 
 app = Flask(__name__)
@@ -55,10 +56,18 @@ def delete_my_order(id):
     return redirect("/orders")
 
 
-@app.route("/updateorders/<id>", methods=["GET"])
-def asd():
-    order = get_orders(id)
-    return render_template("updateorders.html", order=order)
+@app.route("/updateorders/<id>", methods=["GET", "POST"])
+def update(id):
+    if request.method == "GET":
+        order = get_orders()
+        return render_template("updateorders.html", order=order)
+    elif request.method == "POST" and request.form.get("_method") == "PUT":
+        id = id
+        cost = request.form.get("cost")
+        name = request.form.get("name")
+        client_id = request.form.get("client_id")
+        update_order(id, cost, name, client_id)
+        return redirect("/orders")
 
 
 if __name__ == "__main__":

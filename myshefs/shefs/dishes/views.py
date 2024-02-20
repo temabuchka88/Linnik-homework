@@ -4,9 +4,12 @@ from django.http import HttpResponse, Http404
 from .models import Shefs
 
 
-def show_shefs(request, id):
-    try:
-        shef_info = get_object_or_404(Shefs, id=id)
-    except Shefs.DoesNotExist:
-        raise Http404("Shef does not exist")
-    return render(request, "shef.html", {"shef_info": shef_info})
+def show_shef_and_dishes(request, shef_id):
+    shef = get_object_or_404(Shefs, id=shef_id)
+    dishes = shef.dishes.all()
+    return render(request, "shef_and_dishes.html", {"shef": shef, "dishes": dishes})
+
+
+def show_all_shef(request):
+    shefs = Shefs.objects.all()
+    return render(request, "shefs.html", {"shefs": shefs})

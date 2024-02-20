@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1><img style="height: 160px; width: 238px;" src="{{ shef.photo.url }}" class="card-img-top" alt="{{ shef.photo}}">{{ shef.name }}</h1>
+<p>{{ shef.about_me }}</p>
+
+<h2>Dishes</h2>
+<div class="card-deck">
+    {% for dish in dishes %}
+    <div class="card">
+        <img style="height: 160px; width: 238px;" src="{{ dish.dish_photo.url }}" class="card-img-top" alt="{{ dish.dish_photo }}">
+        <div class="card-body">
+            <h5 class="card-title">{{ dish.dish_name }}</h5>
+            <p class="card-text">Description: {{ dish.dish_description}}</p>
+            <p class="card-text">Price: {{ dish.dish_prise }}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock content %}

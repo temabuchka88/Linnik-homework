@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>All shefs</h2>
+<div class="card-deck">
+    {% for shef in shefs %}
+    <a href="{% url 'show_shef_and_dishes' shef_id=shef.id %}" style="text-decoration: none; color: inherit;">
+    <div class="card">
+        <img style="height: 160px; width: 238px;" src="{{ shef.photo.url }}" class="card-img-top" alt="{{ shef.photo}}" {{ shef.name }}>
+        <div class="card-body">
+            <h5 class="card-title">{{ shef.name }}</h5>
+            <p class="card-text">Cuisines:</p>
+        <ul>
+            {% for cuisine in shef.cuisines_country.all %}
+                <li>{{ cuisine.cuisine_of_country }}</li>
+            {% endfor %}
+        </ul>
+        </div>
+    </div>
+    </a>
+    {% endfor %}
+</div>
+
+{% endblock content %}

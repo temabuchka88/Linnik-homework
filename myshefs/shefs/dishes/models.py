@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from django.contrib.auth.models import User
 
 
 class Cuisines(models.Model):
@@ -32,6 +33,7 @@ class Cuisines(models.Model):
 
 
 class Shefs(models.Model):
+    photo = models.ImageField(upload_to="static/images/shefs/")
     name = models.CharField(max_length=30)
     about_me = models.CharField(max_length=700)
     cuisines_country = models.ManyToManyField(Cuisines)
@@ -42,6 +44,7 @@ class Shefs(models.Model):
 
 class Dishes(models.Model):
     dish_name = models.CharField(max_length=100)
+    dish_photo = models.ImageField(upload_to="static/images/dishes/")
     dish_description = models.TextField()
     chef = models.ForeignKey(Shefs, on_delete=models.CASCADE, related_name="dishes")
     dish_prise = models.IntegerField()

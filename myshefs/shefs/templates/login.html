@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+        <div class="container position-relative px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="site-heading">
+                        <h1>Login</h1>
+                        <form action="/login/" method="POST">
+                            {% csrf_token %} 
+                            {{ login.as_p }}
+                            <input type="submit">
+                        </form>
+                    </div>
+                <a href="{% url 'registration' %}" class="btn btn-dark">Sign up</a>
+                </div>
+            </div>
+        </div>
+    </header>
+{% endblock content %}

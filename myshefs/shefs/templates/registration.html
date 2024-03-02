@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form action="{% url 'registration' %}" method="POST" style="text-decoration: none; color: inherit;">
+    {% csrf_token %}
+    {{ user.as_p }}
+    <input type="Submit">
+</form>
+{% endblock content %}

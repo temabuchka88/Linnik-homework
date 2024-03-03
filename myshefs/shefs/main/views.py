@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from .forms import RegisterUser, LoginUser, UserProfileForm
+from .forms import RegisterUser, LoginUser, UserProfileForm, CreateDish, MyUser, User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from dishes.models import Shefs, Cuisines
@@ -54,10 +54,22 @@ def show_my_profile(request):
 def edit_my_profile(request):
     user = request.user
     if request.method == "POST":
-        form = UserProfileForm(request.POST, request.FILES, instance=user)
+        form = UserProfileForm(request.POST, request.FILES, instance=user.myuser)
         if form.is_valid():
             form.save()
             return redirect("/my_profile/")
     else:
         form = UserProfileForm(instance=user)
     return render(request, "edit_my_profile.html", {"form": form})
+
+
+@login_required
+def create_dish(request):
+    if request.method == "POST":
+        form = CreateDish(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect("/")
+    else:
+        form = CreateDish()
+    return render(request, "create_dish.html", {"form": form})

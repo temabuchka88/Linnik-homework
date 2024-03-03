@@ -3,8 +3,6 @@ from django.db import models
 from dishes.models import Shefs
 
 
-def user_is_shef(self):
-    return hasattr(self, "shefs")
-
-
-User.add_to_class("is_shef", user_is_shef)
+class MyUser(User):
+    avatar = models.ImageField(upload_to="static/images/users/", blank=True)
+    is_shef = models.BooleanField(default=False)

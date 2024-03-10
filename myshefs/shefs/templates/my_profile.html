@@ -13,8 +13,8 @@
                     <div class="form-group row">
                         <label for="avatar" class="col-md-4 col-form-label text-md-right">Avatar:</label>
                         <div class="col-md-6">
-                            {% if user.profile.avatar %}
-                                <img src="{{ user.profile.avatar.url }}" alt="Avatar" style="max-width: 100px; max-height: 100px;">
+                            {% if user.myuser.avatar %}
+                                <img src="{{ user.myuser.avatar.url }}" alt="Avatar" style="max-width: 100px; max-height: 100px;">
                             {% else %}
                                 <p>No avatar</p>
                             {% endif %}
@@ -50,7 +50,9 @@
 
                     <div class="form-group row mb-0">
                         <div class="col-md-6 offset-md-4">
-                            <a href="{% url 'edit_my_profile' %}" class="btn btn-primary">Start a chef</a>
+                            {% if not user.myuser.is_shef %}
+                                <a href="{% url 'select_cuisines' %}" class="btn btn-primary">Start a chef</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

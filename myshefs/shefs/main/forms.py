@@ -8,7 +8,7 @@ from .models import MyUser
 
 class RegisterUser(ModelForm):
     class Meta:
-        model = User
+        model = MyUser
         fields = ["username", "password", "email"]
 
 

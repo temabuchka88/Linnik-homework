@@ -2,7 +2,11 @@
 
 {% block content %}
 
-<h1><img style="height: 160px; width: 238px;" src="{{ shef.photo.url }}" class="card-img-top" alt="{{ shef.photo}}">{{ shef.name }}</h1>
+{% if shef.photo %}
+<img style="height: 160px; width: 238px;" src="{{ shef.photo.url }}" class="card-img-top" alt="{{ shef.name }}">
+{% else %}
+<p>No photo available</p>
+{% endif %}
 <p>{{ shef.about_me }}</p>
 
 <h2>Dishes</h2>

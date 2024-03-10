@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from dishes.models import Shefs, Cuisines
 from django.contrib import messages
+from .models import MyUser
 
 
 def registration(request):
@@ -53,13 +54,15 @@ def show_my_profile(request):
 @login_required
 def edit_my_profile(request):
     user = request.user
+    print(dir(user))
     if request.method == "POST":
         form = UserProfileForm(request.POST, request.FILES, instance=user.myuser)
         if form.is_valid():
             form.save()
             return redirect("/my_profile/")
     else:
-        form = UserProfileForm(instance=user)
+        form = UserProfileForm(instance=user.myuser)
+
     return render(request, "edit_my_profile.html", {"form": form})
 
 
@@ -73,3 +76,71 @@ def create_dish(request):
     else:
         form = CreateDish()
     return render(request, "create_dish.html", {"form": form})
+
+
+@login_required
+def select_cuisines(request):
+    popular_cuisines = Cuisines.objects.filter(
+        cuisine_of_country__in=[
+            "Европейская кухня",
+            "Русская кухня",
+            "Белорусская кухня",
+            "Американская кухня",
+            "Итальянская кухня",
+            "Французская кухня",
+            "Грузинская кухня",
+            "Украинская кухня",
+            "Азиатская кухня",
+        ]
+    )
+    other_cuisines = Cuisines.objects.exclude(
+        cuisine_of_country__in=[
+            "Европейская кухня",
+            "Русская кухня",
+            "Белорусская кухня",
+            "Американская кухня",
+            "Итальянская кухня",
+            "Французская кухня",
+            "Грузинская кухня",
+            "Украинская кухня",
+            "Азиатская кухня",
+        ]
+    )
+    if request.method == "POST":
+        selected_cuisines = request.POST.getlist("cuisine")
+        request.user.myuser.cuisines.set(selected_cuisines)
+        return redirect("/")  # Замените 'profile' на ваш URL для профиля шефа
+    return render(
+        request,
+        "start_shef_cuisines.html",
+        {"popular_cuisines": popular_cuisines, "other_cuisines": other_cuisines},
+    )
+
+
+@login_required
+def shef_create_info(request):
+    return render(request, "shef_create_info.html")
+
+
+@login_required
+def shef_supply_info(request):
+    if request.method == "POST":
+        user = request.user.myuser
+        if not user.is_shef:
+            shef = Shefs.objects.create(name=user.username)
+            user.is_shef = True
+            user.shef = shef
+            user.save()
+        return redirect("/my_profile/")
+    return render(request, "shef_supply_info.html")
+
+
+# @login_required
+# def confirm_star_shef(request):
+#     if request.method == "POST":
+#         user = request.user.myuser
+#         if not user.is_shef:
+#             shef = Shefs.objects.create(name=user.username)
+#             user.is_shef = True
+#             user = shef
+#             user.save()

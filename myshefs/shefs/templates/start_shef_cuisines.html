@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Welcome to Shef! Tell us what type of food you like to cook.</h2>
+    <p>This will help us customize your experience. You can change this and add more details about your specialties later.</p>
+    
+    <h3>Popular Cuisines:</h3>
+    <div class="row">
+        {% for cuisine in popular_cuisines %}
+        <div class="col-md-4">
+            <button type="button" class="btn btn-primary btn-block cuisine-button" data-id="{{ cuisine.id }}" data-name="{{ cuisine.cuisine_of_country }}">{{ cuisine.cuisine_of_country }}</button>
+        </div>
+        {% endfor %}
+    </div>
+
+    <h3>Other Cuisines:</h3>
+    <select multiple class="form-control" id="other-cuisines" name="cuisine">
+        {% for cuisine in other_cuisines %}
+        <option value="{{ cuisine.id }}">{{ cuisine.cuisine_of_country }}</option>
+        {% endfor %}
+    </select>
+
+    <div id="selected-cuisines"></div>
+
+    <form id="yourFormId" method="post"> <!-- добавляем ID к форме -->
+        {% csrf_token %}
+        <button type="button" class="btn btn-primary mt-3" id="saveButton">Save</button> <!-- изменяем ID кнопки -->
+    </form>
+</div>
+
+<script>
+    var selectedCuisines = [];
+
+    document.querySelectorAll('.cuisine-button').forEach(function(button) {
+        button.addEventListener('click', function() {
+            var cuisineId = button.getAttribute('data-id');
+            var cuisineName = button.getAttribute('data-name');
+            if (!selectedCuisines.includes(cuisineId)) {
+                selectedCuisines.push(cuisineId);
+                updateSelectedCuisines();
+            }
+        });
+    });
+
+    document.querySelector('#other-cuisines').addEventListener('change', function() {
+        var selectedOption = this.options[this.selectedIndex];
+        var cuisineId = selectedOption.value;
+        var cuisineName = selectedOption.text;
+        if (!selectedCuisines.includes(cuisineId)) {
+            selectedCuisines.push(cuisineId);
+            updateSelectedCuisines();
+        }
+    });
+
+    document.getElementById('saveButton').addEventListener('click', function() { // добавляем обработчик для кнопки
+        var form = document.getElementById('yourFormId'); // получаем форму по ID
+        if (form.checkValidity()) {
+            form.submit(); // отправляем форму
+            window.location.href = '{% url 'start_info' %}'; // перенаправляем на другую страницу
+        }
+    });
+
+    function updateSelectedCuisines() {
+        var selectedCuisinesContainer = document.getElementById('selected-cuisines');
+        selectedCuisinesContainer.innerHTML = '';
+        selectedCuisines.forEach(function(cuisineId) {
+            var cuisineName = document.querySelector('[value="' + cuisineId + '"]').text;
+            var cuisineElement = document.createElement('div');
+            cuisineElement.textContent = cuisineName;
+            cuisineElement.classList.add('selected-cuisine');
+            selectedCuisinesContainer.appendChild(cuisineElement);
+        });
+    }
+</script>
+{% endblock %}

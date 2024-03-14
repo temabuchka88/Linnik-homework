@@ -12,9 +12,9 @@ class Cuisines(models.Model):
 
 
 class Shefs(models.Model):
-    photo = models.ImageField(upload_to="static/images/shefs/")
+    photo = models.ImageField(upload_to="static/images/shefs/", blank=True)
     name = models.CharField(max_length=30)
-    about_me = models.CharField(max_length=700)
+    about_me = models.CharField(max_length=700, blank=True)
     cuisines_country = models.ManyToManyField(Cuisines)
 
     def __str__(self):

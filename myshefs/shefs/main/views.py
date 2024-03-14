@@ -108,8 +108,19 @@ def select_cuisines(request):
     )
     if request.method == "POST":
         selected_cuisines = request.POST.getlist("cuisine")
-        request.user.myuser.cuisines.set(selected_cuisines)
-        return redirect("/")  # Замените 'profile' на ваш URL для профиля шефа
+        # request.user.myuser.cuisines.set(selected_cuisines)
+        if not request.user.myuser.is_shef:
+            shef = Shefs.objects.create(
+                name=request.user.myuser.username,
+            )
+            for cuisine_id in selected_cuisines:
+                cuisine = Cuisines.objects.get(id=cuisine_id)
+                shef.cuisines_country.add(cuisine)
+            shef.save()
+            request.user.myuser.is_shef = True
+            request.user.myuser.shef = shef
+            request.user.myuser.save()
+        return render(request, "shef_create_info.html")
     return render(
         request,
         "start_shef_cuisines.html",
@@ -125,22 +136,11 @@ def shef_create_info(request):
 @login_required
 def shef_supply_info(request):
     if request.method == "POST":
-        user = request.user.myuser
-        if not user.is_shef:
-            shef = Shefs.objects.create(name=user.username)
-            user.is_shef = True
-            user.shef = shef
-            user.save()
+        #     user = request.user
+        #     if not user.myuser.is_shef:
+        #         shef = Shefs.objects.create(name=user.username,cuisines_country=selected_cuisines)
+        #         user.myuser.shef = shef
+        #         user.myuser.is_shef = True
+        #         user.myuser.save()
         return redirect("/my_profile/")
     return render(request, "shef_supply_info.html")
-
-
-# @login_required
-# def confirm_star_shef(request):
-#     if request.method == "POST":
-#         user = request.user.myuser
-#         if not user.is_shef:
-#             shef = Shefs.objects.create(name=user.username)
-#             user.is_shef = True
-#             user = shef
-#             user.save()

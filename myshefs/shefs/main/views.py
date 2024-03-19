@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from .forms import RegisterUser, LoginUser, UserProfileForm, CreateDish, MyUser, User
+from .forms import RegisterUser, LoginUser, UserProfileForm, CreateDish, MyUser, User, EditDish
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
-from dishes.models import Shefs, Cuisines
+from dishes.models import Shefs, Cuisines, Dishes
 from django.contrib import messages
 from .models import MyUser
 
@@ -54,28 +54,15 @@ def show_my_profile(request):
 @login_required
 def edit_my_profile(request):
     user = request.user
-    print(dir(user))
     if request.method == "POST":
         form = UserProfileForm(request.POST, request.FILES, instance=user.myuser)
         if form.is_valid():
             form.save()
-            return redirect("/my_profile/")
+            return redirect("/account/profile/")
     else:
         form = UserProfileForm(instance=user.myuser)
 
     return render(request, "edit_my_profile.html", {"form": form})
-
-
-@login_required
-def create_dish(request):
-    if request.method == "POST":
-        form = CreateDish(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect("/")
-    else:
-        form = CreateDish()
-    return render(request, "create_dish.html", {"form": form})
 
 
 @login_required
@@ -112,6 +99,7 @@ def select_cuisines(request):
         if not request.user.myuser.is_shef:
             shef = Shefs.objects.create(
                 name=request.user.myuser.username,
+                photo = request.user.myuser.avatar,
             )
             for cuisine_id in selected_cuisines:
                 cuisine = Cuisines.objects.get(id=cuisine_id)
@@ -136,11 +124,56 @@ def shef_create_info(request):
 @login_required
 def shef_supply_info(request):
     if request.method == "POST":
-        #     user = request.user
-        #     if not user.myuser.is_shef:
-        #         shef = Shefs.objects.create(name=user.username,cuisines_country=selected_cuisines)
-        #         user.myuser.shef = shef
-        #         user.myuser.is_shef = True
-        #         user.myuser.save()
-        return redirect("/my_profile/")
+        return redirect("/account/profile/")
     return render(request, "shef_supply_info.html")
+
+# @login_required
+# def shef_profile(request):
+#     if request.method == 'POST':
+#         pass
+#     else:
+#         return render(request, 'shef_profile.html',)
+@login_required
+def create_dish(request):
+    if request.method == "POST":
+        form = CreateDish(request.POST, request.FILES)
+        if form.is_valid():
+            dish = form.save(commit=False)
+            shef = Shefs.objects.get(name=request.user.myuser.username)
+            dish.chef = shef
+            dish.save()
+            return redirect("/")
+    else:
+        form = CreateDish()
+    return render(request, "create_dish.html", {"form": form})
+
+@login_required
+def all_food_items(request):
+    if request.method == "POST":
+        dish_id = request.POST.get("dish_id")
+        dish = get_object_or_404(Dishes, id=dish_id)
+        dish.delete()
+        return redirect("all_food_items")
+    else:
+        shef = Shefs.objects.get(name=request.user.myuser.username)
+        dishes = shef.dishes.all()
+        return render(request, "all_food_items.html", {"shef": shef, "dishes": dishes})
+    
+@login_required
+def edit_dish(request, dish_id):
+    dish = get_object_or_404(Dishes, id=dish_id)
+    if request.method == "POST":
+        form = EditDish(request.POST, request.FILES, instance=dish)
+        if form.is_valid():
+            form.save()
+            return redirect("all_food_items")
+    else:
+        form = EditDish(instance=dish)
+    return render(request, "edit_dish.html", {"form": form, "dish": dish})
+
+# @login_required
+# def edit_shef_profile(request):
+#     if request.method == "POST":
+#         pass
+#     else:
+#         return render(request,)

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <h2>All dishes</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Image</th>
+                <th scope="col">Name</th>
+                <th scope="col">Price</th>
+                <th scope="col">Description</th>
+                <th scope="col">Weight</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dish in dishes %}
+<tr>
+    <td><img src="{{ dish.dish_photo.url }}" alt="{{ dish.dish_name }}" style="max-width: 100px;"></td>
+    <td>{{ dish.dish_name }}</td>
+    <td>{{ dish.dish_prise }}</td>
+    <td>{{ dish.dish_description }}</td>
+    <td>{{ dish.dish_weight }}</td>
+    <td>
+        <a href="{% url 'edit_dish' dish.id %}" class="btn btn-primary">Edit</a> |
+        <form method="post" action="{% url 'delete_dish' %}">
+            {% csrf_token %}
+            <input type="hidden" name="dish_id" value="{{ dish.id }}">
+            <button type="submit" class="btn btn-danger" onclick="return confirm('Вы уверены, что хотите удалить это блюдо?')">Delete</button>
+        </form>
+    </td>
+</tr>
+{% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="form-group row mb-0">
+    <div class="col-md-6 offset-md-4">
+        <a href="{% url 'create_dish' %}" class="btn btn-primary">Create_dish</a>
+    </div>
+</div>
+{% endblock content %}

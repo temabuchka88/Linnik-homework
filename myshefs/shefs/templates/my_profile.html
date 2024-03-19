@@ -50,6 +50,12 @@
 
                     <div class="form-group row mb-0">
                         <div class="col-md-6 offset-md-4">
+                            <a href="{% url 'all_food_items' %}" class="btn btn-primary">All dishes</a>
+                        </div>
+                    </div>
+
+                    <div class="form-group row mb-0">
+                        <div class="col-md-6 offset-md-4">
                             {% if not user.myuser.is_shef %}
                                 <a href="{% url 'select_cuisines' %}" class="btn btn-primary">Start a chef</a>
                             {% endif %}

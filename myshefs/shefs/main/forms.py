@@ -26,4 +26,9 @@ class UserProfileForm(ModelForm):
 class CreateDish(ModelForm):
     class Meta:
         model = Dishes
-        fields = "__all__"
+        fields = ["dish_name", "dish_photo", "dish_description", "dish_prise", "dish_weight"]
+
+class EditDish(ModelForm):
+    class Meta:
+        model = Dishes
+        fields = ["dish_name", "dish_photo", "dish_description", "dish_prise", "dish_weight"]

@@ -8,6 +8,8 @@ urlpatterns = [
     path("", include("dishes.urls")),
     path("order/", include("dishes.urls")),
     path("", include("main.urls")),
+    path("shef/", include("main.urls")),
+    path("account/", include("main.urls")),
 ]
 
 if settings.DEBUG:
